@@ -96,9 +96,6 @@ int main(int argc, char **argv)
 	struct timeval time_out;
 	int select_retval;
 
-	/* a silly message */
-	char *message = "Welcome! COMP/ELEC 429 Students!\n";
-
 	/* number of bytes sent/received */
 	int count;
 
@@ -106,6 +103,7 @@ int main(int argc, char **argv)
 	int num;
 
 	/* linked list for keeping track of connected sockets */
+	/* initialize a dummy head */
 	struct node head;
 	struct node *current, *next;
 	head.socket = -1;
@@ -116,10 +114,6 @@ int main(int argc, char **argv)
 	int BUF_LEN = 1000;
 	buf = (char *)malloc(BUF_LEN);
 
-	/* initialize dummy head node of linked list */
-	head.socket = -1;
-	head.next = 0;
-
 	/* create a server socket to listen for TCP connection requests */
 	if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
 	{
@@ -128,6 +122,7 @@ int main(int argc, char **argv)
 	}
 
 	/* set option so we can reuse the port number quickly after a restart */
+	/* SO_REUSEADDR: allows a socket to bind to a socket address that is already in use by another socket */
 	if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)) < 0)
 	{
 		perror("setting TCP socket option");
@@ -136,9 +131,9 @@ int main(int argc, char **argv)
 
 	/* fill in the address of the server socket */
 	memset(&sin, 0, sizeof(sin));
-	sin.sin_family = AF_INET;
-	sin.sin_addr.s_addr = INADDR_ANY;
-	sin.sin_port = htons(server_port);
+	sin.sin_family = AF_INET;		   /* specifies that this is an IPv4 socket */
+	sin.sin_addr.s_addr = INADDR_ANY;  /* the socket will listen on all available network interfaces */
+	sin.sin_port = htons(server_port); /* specified server_port, using the htons() function to convert it to network byte order */
 
 	/* bind server socket to the address */
 	if (bind(sock, (struct sockaddr *)&sin, sizeof(sin)) < 0)
@@ -154,9 +149,11 @@ int main(int argc, char **argv)
 		abort();
 	}
 
-	/* now we keep waiting for incoming connections,
+	/*
+	now we keep waiting for incoming connections,
 	check for incoming data to receive,
-	check for ready socket to send more data */
+	check for ready socket to send more data
+	*/
 	while (1)
 	{
 
@@ -237,14 +234,6 @@ int main(int argc, char **argv)
 
 				/* remember this client connection in our linked list */
 				add(&head, new_sock, addr);
-
-				/* let's send a message to the client just for fun */
-				count = send(new_sock, message, strlen(message) + 1, 0);
-				if (count < 0)
-				{
-					perror("error sending message to client");
-					abort();
-				}
 			}
 
 			/*
@@ -259,7 +248,6 @@ int main(int argc, char **argv)
 				if (FD_ISSET(current->socket, &read_set))
 				{
 					/* we have data from a client */
-
 					count = recv(current->socket, buf, BUF_LEN, 0);
 					if (count <= 0)
 					{
@@ -279,8 +267,8 @@ int main(int argc, char **argv)
 					}
 					else
 					{
-						ssize_t sendBytes = send(current->socket, buf, count, MSG_DONTWAIT);
-						printf("Send Bytes: %ld\n", sendBytes);
+						int sendCount = send(current->socket, buf, count, MSG_DONTWAIT);
+						printf("Send Bytes: %ld\n", sendCount);
 					}
 				}
 			}
