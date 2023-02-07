@@ -64,9 +64,11 @@ int main(int argc, char **argv)
     else
     {
         /* set the default message*/
+        /* size message: 2 bytes */
         unsigned short *size_msg = (unsigned short *)sendbuffer;
         *size_msg = size;
 
+        /* timeval: 16 bytes */
         struct timeval tv;
         gettimeofday(&tv, NULL);
         struct timeval *tv_ptr = (struct timeval *)(sendbuffer + 2);
@@ -104,7 +106,6 @@ int main(int argc, char **argv)
        message from the server in this example, let's try receiving a
        message from the socket. this call will block until some data
        has been received */
-
     while (num)
     {
         /* write the timestamp into the buffer*/
