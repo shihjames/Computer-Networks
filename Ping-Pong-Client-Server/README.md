@@ -1,4 +1,4 @@
-#Ping-Pong Client Server
+# Ping-Pong Client Server
 
 This program aim to measure the Bandwidth Independent Delay (BID). Since RTT includes the package transmission time affected by bandwidth, i.e. Bandwidth Dependent Delay (BDD), we calculate the Bandwidth Independent Delay by subtracting the Bandwidth Dependent Delay from RTT.
 
