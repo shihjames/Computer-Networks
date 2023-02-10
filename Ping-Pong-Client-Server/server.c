@@ -99,6 +99,9 @@ int main(int argc, char **argv)
     /* number of bytes sent/received */
     int count;
 
+    /* numeric value received */
+    // int num;
+
     /* linked list for keeping track of connected sockets */
     /* initialize a dummy head */
     struct node head;
@@ -110,13 +113,8 @@ int main(int argc, char **argv)
     char *buf;
     int BUF_LEN = 65536;
     buf = (char *)malloc(BUF_LEN);
-    
-    /* 
-    create a server socket to listen for TCP connection requests 
-    PF_INET: specifies the protocol family (IPv4).
-    SOCK_STREAM: specifies the socket type as a stream socket, which provides a reliable, stream-oriented connection.
-    IPPROTO_TCP: specifies the protocol as TCP.
-    */
+
+    /* create a server socket to listen for TCP connection requests */
     if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
     {
         perror("opening TCP socket");
@@ -269,11 +267,10 @@ int main(int argc, char **argv)
                     }
                     else
                     {
-                        unsigned short *data_size = (unsigned short *)buf;
-                        int sendCount = send(current->socket, buf, *data_size, MSG_DONTWAIT);
-                        char msg[65536] = {};
-                        memcpy(msg, buf + 18, *data_size - 18);
-                        printf("Data Size: %d, Sending: %s\n", *data_size, msg);
+                        // 
+                        unsigned short *data_size = (unsigned short*)buf;
+                        
+                        int sendCount = send(current->socket, buf, count, MSG_DONTWAIT);
                     }
                 }
             }
