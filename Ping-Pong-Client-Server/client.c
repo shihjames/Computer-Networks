@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <sys/time.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -48,35 +49,36 @@ int main(int argc, char **argv)
     leaves the potential for
     buffer overflow vulnerability
     */
-    buffer = (char *)malloc(size*2);
-    memset(buffer, 0, size*2);
+    buffer = (char *)malloc(size * 2);
+    memset(buffer, 0, size * 2);
     if (!buffer)
     {
         perror("failed to allocated buffer");
         abort();
     }
 
-    sendbuffer = (char *)malloc(size*2);
-    memset(sendbuffer, 0, size*2);
+    sendbuffer = (char *)malloc(size * 2);
+    memset(sendbuffer, 0, size * 2);
     if (!sendbuffer)
     {
         perror("failed to allocated sendbuffer");
         abort();
     }
-    else 
+    else
     {
         /* set the default message*/
-        unsigned short *size_msg = (unsigned short*)sendbuffer;
+        unsigned short *size_msg = (unsigned short *)sendbuffer;
         *size_msg = size;
 
         struct timeval tv;
         gettimeofday(&tv, NULL);
-        struct timeval *tv_ptr = (struct timeval*)(sendbuffer + 2);
+        struct timeval *tv_ptr = (struct timeval *)(sendbuffer + 2);
         *tv_ptr = tv;
 
         char *write_ptr = sendbuffer + 18;
         int i = 0;
-        for (i = 0; i < size - 18; i++) {
+        for (i = 0; i < size - 18; i++)
+        {
             write_ptr[i] = 'a';
         }
     }
@@ -109,20 +111,19 @@ int main(int argc, char **argv)
     double bddSum = 0.0, latencySum = 0.0;
 
     while (num)
-    {   
+    {
         double bddTmp = 0.0;
         int sentSize = 0;
-        int sentSum  = 0;
+        int sentSum = 0;
 
         /* write the timestamp into the buffer*/
         struct timeval tv;
         struct timeval bdd;
         gettimeofday(&tv, NULL);
-        struct timeval *tv_ptr = (struct timeval*)(sendbuffer + 2);
+        struct timeval *tv_ptr = (struct timeval *)(sendbuffer + 2);
         *tv_ptr = tv;
-        
 
-        // send the data the server 
+        // send the data the server
         while ((sentSize = send(sock, sendbuffer + sentSum, size - sentSum, 0)) >= 0 && sentSum + sentSize < size)
         {
             sentSum += sentSize;
@@ -132,43 +133,42 @@ int main(int argc, char **argv)
             printf("Send fail");
             continue;
         }
-        else 
+        else
         {
             gettimeofday(&bdd, NULL);
-            double sec_diff  = (double)bdd.tv_sec - (double)tv.tv_sec;
+            double sec_diff = (double)bdd.tv_sec - (double)tv.tv_sec;
             double usec_diff = (double)bdd.tv_usec - (double)tv.tv_usec;
-            double diff = (sec_diff*1000000 + usec_diff)/1000;
+            double diff = (sec_diff * 1000000 + usec_diff) / 1000;
             bddTmp = diff;
         }
 
-
         // record the received size
         int recvSize = 0;
-        while ((count = recv(sock, buffer + recvSize, size , 0)) > 0 && recvSize + count < size) {
+        while ((count = recv(sock, buffer + recvSize, size, 0)) > 0 && recvSize + count < size)
+        {
             recvSize += count;
         }
-        
+
         if (count <= 0)
         {
             perror("receive failure");
             continue;
         }
         else
-        {   
+        {
             struct timeval endtime;
             gettimeofday(&endtime, NULL);
 
-            struct timeval *starttime = (struct timeval*)(buffer + 2);
+            struct timeval *starttime = (struct timeval *)(buffer + 2);
 
-            double sec_diff  = (double)endtime.tv_sec - (double)starttime->tv_sec;
+            double sec_diff = (double)endtime.tv_sec - (double)starttime->tv_sec;
             double usec_diff = (double)endtime.tv_usec - (double)starttime->tv_usec;
-            double diff = (sec_diff*1000000 + usec_diff)/1000;
+            double diff = (sec_diff * 1000000 + usec_diff) / 1000;
             latencySum += diff;
             bddSum += bddTmp;
 
             printf("Here is the tranfer latency: %.3f ms\n", diff);
             printf("cmp: %d\n", memcmp(sendbuffer, buffer, size));
-
         }
 
         num--;
