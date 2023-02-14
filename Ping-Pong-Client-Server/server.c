@@ -267,9 +267,7 @@ int main(int argc, char **argv)
                     }
                     else
                     {
-                        //
                         unsigned short *data_size = (unsigned short *)buf;
-
                         int sendCount = send(current->socket, buf, count, MSG_DONTWAIT);
                     }
                 }
