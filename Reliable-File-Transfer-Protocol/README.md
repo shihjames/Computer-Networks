@@ -33,8 +33,18 @@
 -   run make file
     -   make all
 -   run sendfile
-    -   ./sendfile -r <recv_host>:<recv_port> -f <subdir>/<filename>
+    -   sendfile -r <recv_host>:<recv_port> -f <subdir>/<filename>
     -   e.g. sendfile -r 128.42.124.180:18010 -f ./test/test.txt
 -   run recvfile
-    -   ./recvfile -p <recv port>
+
+    -   recvfile -p <recv port>
     -   e.g. recvfile -p 18010
+
+-   run sender bash script
+
+    -   bash test_send.sh <recv_port> <test_case_num>
+    -   e.g. test_send.sh 18010 1
+
+-   run receiver bash script
+    -   bash test_recv.sh <recv_port> <test_case_num>
+    -   e.g. test_recv.sh 18010 1
