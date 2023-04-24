@@ -1,0 +1,13 @@
+We developed 3 configurations named simpletest3, simpletest4, simpletest5. 
+
+simpletest3 is more complicated and consists of 5 nodes labeled as 1, 2, 3, 4, and 5. 
+The network is interconnected by links with specified delays and packet loss probabilities. 
+1) Ping and pong packets: The test case checks if packets are being sent between nodes 2 and 4, indicating a "ping" and "pong" communication pattern.
+2) Periodic updates: The test case checks if packets are being periodically sent between nodes 3 and 5, indicating periodic updates.
+3) Data packets: The test case checks if data packets are being sent between nodes 1 and 2, as well as between nodes 4 and 5, indicating data communication. Additionally, the test case also tests the impact of link disruptions (linkdying and linkcomingup events) on the transmission of data packets, simulating real-world scenarios where network links may experience temporary failures.
+4) Link dying and coming up events: The test case includes link dying and coming up events between Node 3 and Node 4. This can be used to test if the router network is able to handle link failures and recovery correctly, by checking if the appropriate events are triggered and if the router network can re-establish communication after link recovery.
+5) Packet loss probabilities: The test case includes different packet loss probabilities for different links. This can be used to test if the router network can handle varying levels of packet loss, and if the appropriate mechanisms are in place to recover from packet loss events, such as retransmissions or alternative routing paths.
+
+simpletest4 is more complicated and consists of 5 nodes labeled as 0, 1, 2, 3, 4. The network is interconnected by links with specified delays and packet loss probabilities. During this test, we want to test cases that sending packets through nodes that are not directly connected.
+
+simpletest5 is to test the Dijkstra's algorithm(shortest path) In this topology, there are four nodes and five links. The link delays are different, and there is no link failure. The event list contains only one event: a packet transmission from node 1 to node 4 at time 1.00. The expected shortest path from node 1 to node 4 is (1,2,4).

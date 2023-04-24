@@ -1,0 +1,4 @@
+The router network in the given test case is to test the Dijkstra's algorithm(shortest path)
+In this topology, there are four nodes and five links. The link delays are different, and there is no link failure. 
+The event list contains only one event: a packet transmission from node 1 to node 4 at time 1.00. 
+The expected shortest path from node 1 to node 4 is (1,2,4).

@@ -1,0 +1,4 @@
+This test is more complicated and consists of 5 nodes labeled as 0, 1, 2, 3, 4. 
+The network is interconnected by links with specified delays and packet loss probabilities. 
+
+During this test, we want to test cases that sending packets through nodes that are not directly connected.

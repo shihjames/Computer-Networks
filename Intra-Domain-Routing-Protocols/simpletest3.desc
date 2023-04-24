@@ -1,0 +1,8 @@
+The router network in the given test case is more complicated and consists of 5 nodes labeled as 1, 2, 3, 4, and 5. 
+The network is interconnected by links with specified delays and packet loss probabilities. 
+
+Tests whether 
+
+1) Ping and pong packets: The test case checks if packets are being sent between nodes 2 and 4, indicating a "ping" and "pong" communication pattern.
+2) Periodic updates: The test case checks if packets are being periodically sent between nodes 3 and 5, indicating periodic updates.
+3) Data packets: The test case checks if data packets are being sent between nodes 1 and 2, as well as between nodes 4 and 5, indicating data communication. Additionally, the test case also tests the impact of link disruptions (linkdying and linkcomingup events) on the transmission of data packets, simulating real-world scenarios where network links may experience temporary failures.
